@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:password_manager/components/Drawer.dart';
 import 'package:password_manager/components/LoadingWidget.dart';
 import 'package:password_manager/configs/colors.dart';
 import 'package:password_manager/configs/routes.dart';
@@ -18,37 +19,52 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   AuthController authController = Get.put(AuthController());
 
   PasswordController passwordController = PasswordController();
 
-  List<PasswordModel>? passwords;
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primary,
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: IconButton(
-        onPressed: () async{
-          await Get.toNamed(AppRoutes.createPass);
-          setState(() {
-            passwords = null;
-          });
-        },
-        icon: const Icon(Icons.add, size: 40, color: AppColors.secondary),
-        style: const ButtonStyle(
-          backgroundColor: MaterialStatePropertyAll(AppColors.white),
-          shape: MaterialStatePropertyAll(
-            CircleBorder()
-          )
+      key: _scaffoldKey,
+      appBar: AppBar(
+        title: Text("Passwords",
+            style: GoogleFonts.merriweather(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: AppColors.white)),
+        leading: IconButton(
+          onPressed: () {
+            _scaffoldKey.currentState?.openDrawer();
+          },
+          icon: const Icon(Icons.menu, color: AppColors.white),
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Get.toNamed(AppRoutes.search);
+            },
+            icon: const Icon(Icons.search_rounded, color: AppColors.white),
+          ),
+          const SizedBox(width: 5),
+          IconButton(
+              onPressed: () async {
+                await Get.toNamed(AppRoutes.createPass);
+                setState(() {
+                  passwordController.passwords = null;
+                });
+              },
+              icon: const Icon(Icons.add, color: AppColors.white)),
+          const SizedBox(width: 10)
+        ],
+        centerTitle: true,
+        backgroundColor: AppColors.primary,
+        surfaceTintColor: Colors.transparent,
       ),
+      drawer: const SideDrawer(),
+      backgroundColor: AppColors.primary,
       body: Stack(
         children: [
           Center(
@@ -61,88 +77,36 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50),
-                    color: AppColors.white,
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          Get.toNamed(AppRoutes.profile);
+                passwordController.passwords != null &&
+                        passwordController.passwords!.isNotEmpty
+                    ? passwordCards()
+                    : FutureBuilder(
+                        future: passwordController.getMyPasswords(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Expanded(
+                                child: Center(child: LoadingWidget()));
+                          } else if (snapshot.connectionState ==
+                              ConnectionState.done) {
+                            passwordController.passwords =
+                                snapshot.data as List<PasswordModel>?;
+
+                            if (passwordController.passwords == null ||
+                                passwordController.passwords!.isEmpty) {
+                              return Text("Data not found",
+                                  style: GoogleFonts.montserrat(
+                                      color: AppColors.white, fontSize: 18));
+                            }
+
+                            return passwordCards();
+                          } else {
+                            return Text("Data not found",
+                                style: GoogleFonts.montserrat(
+                                    color: AppColors.white, fontSize: 18));
+                          }
                         },
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const SizedBox(width: 10),
-                            const Icon(
-                              FontAwesomeIcons.user,
-                              color: AppColors.primary,
-                              size: 20,
-                            ),
-                            const SizedBox(width: 10),
-                            Text("User Name",
-                                style: GoogleFonts.merriweather(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: AppColors.primary)),
-                          ],
-                        ),
-                      ),
-                      const Expanded(child: SizedBox()),
-                      IconButton(
-                          onPressed: () {
-                            authController.logout();
-                          },
-                          icon: const Icon(
-                            Icons.logout,
-                            color: AppColors.primary,
-                            size: 20,
-                          ))
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Text("Passwords",
-                      style: GoogleFonts.merriweather(
-                          color: AppColors.white, fontSize: 20)),
-                ),
-                const SizedBox(height: 5),
-                passwords != null && passwords!.isNotEmpty ?
-                    passwordCards() :
-                FutureBuilder(
-                  future: passwordController.getMyPasswords(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Expanded(
-                          child: Center(child: LoadingWidget()));
-                    } else if (snapshot.connectionState ==
-                        ConnectionState.done) {
-                      passwords = snapshot.data as List<PasswordModel>?;
-
-                      if (passwords == null || passwords!.isEmpty) {
-                        return Text("Data not found",
-                            style: GoogleFonts.montserrat(
-                                color: AppColors.white, fontSize: 18));
-                      }
-
-                      return passwordCards();
-                    } else {
-                      return Text("Data not found",
-                          style: GoogleFonts.montserrat(
-                              color: AppColors.white, fontSize: 18));
-                    }
-                  },
-                )
+                      )
               ],
             ),
           ),
@@ -151,26 +115,24 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-
-  passwordCards(){
+  passwordCards() {
     return Expanded(
       child: ListView.builder(
           itemBuilder: (context, index) {
             return InkWell(
-              onTap: () async{
-                var status = await Get.toNamed(AppRoutes.passDetail, arguments: passwords![index]);
+              onTap: () async {
+                var status = await Get.toNamed(AppRoutes.passDetail,
+                    arguments: passwordController.passwords![index]);
 
-                if(status!=null && status){
+                if (status != null && status) {
                   setState(() {
-                    passwords = null;
+                    passwordController.passwords = null;
                   });
                 }
-
               },
               child: Container(
                 padding: const EdgeInsets.all(10),
-                margin: const EdgeInsets.symmetric(
-                    horizontal: 10, vertical: 5),
+                margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 decoration: BoxDecoration(
                     color: AppColors.secondary.withOpacity(0.3),
                     borderRadius: BorderRadius.circular(10)),
@@ -183,24 +145,23 @@ class _HomeScreenState extends State<HomeScreen> {
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
                           color: AppColors.white,
-                          borderRadius:
-                          BorderRadius.circular(10)),
+                          borderRadius: BorderRadius.circular(10)),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
-                              (passwords![index].passwordType ==
-                                  "Individual")
+                              (passwordController
+                                          .passwords![index].passwordType ==
+                                      "Individual")
                                   ? Icons.person
                                   : Icons.groups,
                               color: AppColors.primary,
                               size: 50),
                           Text(
-                            passwords![index].passwordType ??
+                            passwordController.passwords![index].passwordType ??
                                 "",
                             style: GoogleFonts.montserrat(
-                                fontSize: 12,
-                                color: AppColors.primary),
+                                fontSize: 12, color: AppColors.primary),
                           )
                         ],
                       ),
@@ -208,13 +169,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(width: 10),
                     Expanded(
                       child: Column(
-                        mainAxisAlignment:
-                        MainAxisAlignment.start,
-                        crossAxisAlignment:
-                        CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            passwords![index].title ?? "",
+                            passwordController.passwords![index].title ?? "",
                             style: GoogleFonts.montserrat(
                                 color: AppColors.white,
                                 fontWeight: FontWeight.bold,
@@ -224,24 +183,22 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           const SizedBox(height: 5),
                           Text(
-                            "Category : ${passwords![index].category?.categoryName ?? ""}",
+                            "Category : ${passwordController.passwords![index].category?.categoryName ?? ""}",
                             style: GoogleFonts.montserrat(
-                                color: AppColors.white
-                                    .withOpacity(0.5),
+                                color: AppColors.white.withOpacity(0.5),
                                 fontSize: 14),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
                           const SizedBox(height: 2),
                           Visibility(
-                            visible: passwords![index]
-                                .passwordType ==
+                            visible: passwordController
+                                    .passwords![index].passwordType ==
                                 "Group",
                             child: Text(
-                              "Group : ${passwords![index].group?.groupName ?? ""}",
+                              "Group : ${passwordController.passwords![index].group?.groupName ?? ""}",
                               style: GoogleFonts.montserrat(
-                                  color: AppColors.white
-                                      .withOpacity(0.5),
+                                  color: AppColors.white.withOpacity(0.5),
                                   fontSize: 14),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
@@ -253,16 +210,17 @@ class _HomeScreenState extends State<HomeScreen> {
                               Text(
                                 "📆",
                                 style: GoogleFonts.montserrat(
-                                    color: AppColors.white,
-                                    fontSize: 14),
+                                    color: AppColors.white, fontSize: 14),
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                               ),
                               const SizedBox(width: 5),
-                              Text(DateFormat('MMM dd yyyy').format(DateTime.parse( passwords![index].createdAt!)),
+                              Text(
+                                DateFormat('MMM dd yyyy').format(DateTime.parse(
+                                    passwordController
+                                        .passwords![index].createdAt!)),
                                 style: GoogleFonts.montserrat(
-                                    color: AppColors.white
-                                        .withOpacity(0.5),
+                                    color: AppColors.white.withOpacity(0.5),
                                     fontSize: 14),
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
@@ -277,8 +235,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             );
           },
-          itemCount: passwords?.length ?? 0),
+          itemCount: passwordController.passwords?.length ?? 0),
     );
   }
-
 }
