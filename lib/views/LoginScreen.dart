@@ -87,7 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     authController.updateLoadingState(false);
 
                                     if (isSuccessful) {
-                                      Get.offAllNamed(AppRoutes.home);
+                                      Get.offAllNamed(AppRoutes.nav);
                                     }
                                   }))
                         ],
