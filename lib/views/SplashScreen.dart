@@ -27,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.delayed(const Duration(seconds: 3), () {
 
       if(userModel.token != null && userModel.token!.isNotEmpty){
-        Get.offAllNamed(AppRoutes.home);
+        Get.offAllNamed(AppRoutes.nav);
       }
       else{
         Get.offAllNamed(AppRoutes.logIn);
