@@ -3,32 +3,37 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:password_manager/configs/colors.dart';
 
-class BottomNavBar extends StatelessWidget {
+class BottomNavBar extends StatefulWidget {
   final TabController controller;
 
-  BottomNavBar({super.key, required this.controller});
+  const BottomNavBar({super.key, required this.controller});
 
+  @override
+  State<BottomNavBar> createState() => _BottomNavBarState();
+}
 
+class _BottomNavBarState extends State<BottomNavBar> {
   List<BottomNavigationBarItem> items = [
-    BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: "Home"),
-    BottomNavigationBarItem(icon: Icon(Icons.logout), label: "Logout"),
-    BottomNavigationBarItem(icon: Icon(FontAwesomeIcons.user), label: "Profile")
+    const BottomNavigationBarItem(icon: Icon(FontAwesomeIcons.user), label: "Profile"),
+    const BottomNavigationBarItem(icon: Icon(FontAwesomeIcons.key), label: "Home"),
+    const BottomNavigationBarItem(icon: Icon(Icons.logout), label: "Logout")
   ];
 
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
+      currentIndex: widget.controller.index,
       items: items,
       onTap: (value) {
-        controller.animateTo(value);
+        setState(() {
+          widget.controller.animateTo(value);
+        });
       },
       backgroundColor: AppColors.white,
-      selectedIconTheme: IconThemeData(color: AppColors.secondary),
-      selectedLabelStyle:
-          GoogleFonts.montserrat(color: AppColors.secondary, fontSize: 14),
-      unselectedIconTheme: IconThemeData(color: AppColors.primary),
-      unselectedLabelStyle:
-          GoogleFonts.montserrat(color: AppColors.primary, fontSize: 14),
+      selectedItemColor: AppColors.secondary,
+      unselectedItemColor: AppColors.primary,
+      selectedLabelStyle: GoogleFonts.montserrat(fontSize: 14),
+      unselectedLabelStyle: GoogleFonts.montserrat(fontSize: 14),
     );
   }
 }

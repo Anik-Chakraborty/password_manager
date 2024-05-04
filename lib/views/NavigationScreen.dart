@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:password_manager/components/BottomNavBar.dart';
 import 'package:password_manager/views/HomeScreen.dart';
+import 'package:password_manager/views/LogOutScreen.dart';
+import 'package:password_manager/views/UserProfileScreen.dart';
 
 class NavigationScreen extends StatefulWidget{
   @override
@@ -13,7 +15,7 @@ class _NavigationScreenState extends State<NavigationScreen> with TickerProvider
 
   @override
   void initState() {
-    tabController = TabController(length: 3, vsync: this);
+    tabController = TabController(length: 3, vsync: this, initialIndex: 1);
     super.initState();
   }
 
@@ -24,9 +26,9 @@ class _NavigationScreenState extends State<NavigationScreen> with TickerProvider
         body: TabBarView(
           controller: tabController,
           children: [
-            HomeScreen(),
-            Container(),
-            Container(),
+            const UserProfileScreen(),
+            const HomeScreen(),
+            LogOutScreen(tabController: tabController)
           ],
         ),
     );
