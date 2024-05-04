@@ -7,7 +7,10 @@ import 'package:password_manager/components/Toast.dart';
 import 'package:password_manager/models/PasswordModel.dart';
 import 'package:password_manager/services/ApiService.dart';
 
-class PasswordController{
+class PasswordController extends GetxController{
+
+  List<PasswordModel>? passwords;
+
   getMyPasswords() async{
     try {
       String url = dotenv.get('myPasswords');

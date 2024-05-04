@@ -59,6 +59,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   await userController.updateUserProfile(
                     nameTxtCnt.text, emailTxtCnt.text, phnTxtCnt.text, genderTxtCnt.text, addTxtCnt.text, zipTxtCnt.text, nidTxtCnt.text, fbTxtCnt.text, twtTxtCnt.text, lnkTxtCnt.text, instrTxtCnt.text, sltOccupation.toString()
                   );
+                  setState(() {
+                    user = null;
+                  });
                   Get.back();
                   },
                 style: btnStyle(AppColors.green),
@@ -160,21 +163,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   )
                 ],
               )),
-          Positioned(
-              top: 20,
-              left: 20,
-              child: IconButton(
-                onPressed: () {
-                  Get.back();
-                },
-                icon: const Icon(
-                  Icons.arrow_back,
-                  color: AppColors.primary,
-                ),
-                style: const ButtonStyle(
-                    shape: MaterialStatePropertyAll(CircleBorder()),
-                    backgroundColor: MaterialStatePropertyAll(AppColors.white)),
-              ))
         ],
       ),
     );
