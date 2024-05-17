@@ -73,7 +73,7 @@ class _SearchPageState extends State<SearchPage> {
                             child: TextFormField(
                               controller: searchTxtCnt,
                               onChanged: (value) {
-                                if(value.isNotEmpty && value.length > 2 && context.mounted){
+                                if(context.mounted){
                                   WidgetsBinding.instance.addPostFrameCallback((_){
                                     setState(() {});
                                   });
