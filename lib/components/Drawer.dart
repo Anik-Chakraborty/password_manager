@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:password_manager/configs/colors.dart';
+import 'package:password_manager/configs/routes.dart';
 import 'package:password_manager/controllers/UserController.dart';
 import 'package:password_manager/models/UserModel.dart';
 
@@ -19,18 +20,23 @@ class _SideDrawerState extends State<SideDrawer> {
 
   UserController userCtrl = UserController();
 
-  item(String title, IconData icon){
-    return  Padding(
-      padding: const EdgeInsets.only(bottom: 20),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Icon(icon, color: AppColors.secondary, size: 20),
-          const SizedBox(width: 15),
-          Text(title,
-              style: GoogleFonts.montserrat(
-                  color: AppColors.secondary, fontSize: 20)),
-        ],
+  item(String title, IconData icon, String route){
+    return  InkWell(
+      onTap: () {
+        Get.toNamed(route);
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 20),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(icon, color: AppColors.secondary, size: 20),
+            const SizedBox(width: 15),
+            Text(title,
+                style: GoogleFonts.montserrat(
+                    color: AppColors.secondary, fontSize: 20)),
+          ],
+        ),
       ),
     );
   }
@@ -61,9 +67,9 @@ class _SideDrawerState extends State<SideDrawer> {
 
                Text("~ ${user?.name ?? ""}  ",style: GoogleFonts.montserrat(fontSize: 20, color: AppColors.secondary, fontWeight: FontWeight.bold),),
                const SizedBox(height: 30),
-               item("Category", FontAwesomeIcons.layerGroup),
-               item("Group", FontAwesomeIcons.userGroup),
-               item("Lost Device", FontAwesomeIcons.mobile),
+               item("Category", FontAwesomeIcons.layerGroup, AppRoutes.categories),
+               item("Group", FontAwesomeIcons.userGroup, AppRoutes.groups),
+               item("Lost Device", FontAwesomeIcons.mobile, AppRoutes.categories),
              ],
           ),
         ),
