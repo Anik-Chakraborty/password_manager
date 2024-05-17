@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:password_manager/views/CreatePassword.dart';
+import 'package:password_manager/views/EditPassword.dart';
 import 'package:password_manager/views/LoginScreen.dart';
 import 'package:password_manager/views/NavigationScreen.dart';
 import 'package:password_manager/views/PasswordDetailScreen.dart';
@@ -15,6 +16,8 @@ class AppRoutes {
   static const String createPass = "/createPass";
   static const String passDetail = "/passDetail";
   static const String search = "/search";
+  static const String uptPass = "/uptPass";
+
 
 
 }
@@ -26,5 +29,6 @@ final getRoutes = [
   GetPage(name: AppRoutes.profile, page: () => const UserProfileScreen()),
   GetPage(name: AppRoutes.createPass, page: () => const CreatePassword()),
   GetPage(name: AppRoutes.passDetail, page: () => const PasswordDetailScreen()),
-  GetPage(name: AppRoutes.search, page: () => const SearchPage())
+  GetPage(name: AppRoutes.search, page: () => const SearchPage()),
+  GetPage(name: AppRoutes.uptPass, page: () => const EditPasswordScreen()),
 ];

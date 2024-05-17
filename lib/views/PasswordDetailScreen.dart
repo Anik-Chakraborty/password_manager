@@ -65,22 +65,6 @@ class _PasswordDetailScreenState extends State<PasswordDetailScreen> {
                         const SizedBox(height: 5),
                         data(password?.title ?? ""),
                         const SizedBox(height: 20),
-                        Visibility(
-                            visible: password?.description != null &&
-                                password?.description != "",
-                            child: txtTitle("Description")),
-                        Visibility(
-                            visible: password?.description != null &&
-                                password?.description != "",
-                            child: const SizedBox(height: 5)),
-                        Visibility(
-                            visible: password?.description != null &&
-                                password?.description != "",
-                            child: data(password?.description ?? "")),
-                        Visibility(
-                            visible: password?.description != null &&
-                                password?.description != "",
-                            child: const SizedBox(height: 20)),
                         txtTitle("Type"),
                         const SizedBox(height: 5),
                         data(password?.passwordType ?? ""),
@@ -101,6 +85,18 @@ class _PasswordDetailScreenState extends State<PasswordDetailScreen> {
                         Visibility(
                             visible: password?.passwordType == "Group",
                             child: const SizedBox(height: 20)),
+                        Visibility(
+                            visible: password?.description != null &&
+                                password?.description != "",
+                            child: txtTitle("Description")),
+                        Visibility(
+                            visible: password?.description != null &&
+                                password?.description != "",
+                            child: const SizedBox(height: 5)),
+                        Visibility(
+                            visible: password?.description != null &&
+                                password?.description != "",
+                            child: data(password?.description ?? "")),
                       ],
                     ),
                   )
@@ -112,8 +108,8 @@ class _PasswordDetailScreenState extends State<PasswordDetailScreen> {
                 left: 20,
                 child: IconButton(
                   onPressed: () {
-                    Get.back();
-                    // Get.toNamed(AppRoutes.home);
+                    // Get.back();
+                    Get.toNamed(AppRoutes.nav);
                   },
                   icon: const Icon(
                     Icons.arrow_back,
@@ -151,7 +147,9 @@ class _PasswordDetailScreenState extends State<PasswordDetailScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                              Get.toNamed(AppRoutes.uptPass, arguments: password);
+                          },
                           style: ElevatedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(
                                   vertical: 15, horizontal: 10),
