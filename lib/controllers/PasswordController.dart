@@ -16,7 +16,7 @@ class PasswordController extends GetxController{
       String url = dotenv.get('myPasswords');
 
       if(query != null){
-        url += "$url?search=$query";
+        url = "$url?search=$query";
       }
 
       var response = await ApiService.getRequest(url);
@@ -91,6 +91,95 @@ class PasswordController extends GetxController{
       return null;
     }
   }
+
+
+  getPasswordsByCategory({String? categoryId}) async{
+    try {
+      String url = dotenv.get('passUnderCategory');
+
+      if(categoryId != null){
+        url = "$url/$categoryId";
+      }
+
+      var response = await ApiService.getRequest(url);
+
+      if (response[0] == ApiStatus.completed) {
+
+        if(ApiService.handleStatus(response[1])){
+          return null;
+        }
+
+        var data = jsonDecode(response[1].body);
+
+        debugPrint(data.toString());
+
+        if (data['success'] ?? false) {
+
+          List<PasswordModel> passwords = [];
+
+          for(var x in data['data']){
+            passwords.add(PasswordModel.fromJson(x));
+          }
+
+          return passwords;
+        }
+
+      }
+
+      debugPrint(response[1].body.toString());
+      return null;
+
+    } catch (error) {
+      showToast("Something went wrong", true);
+      debugPrint(error.toString());
+      return null;
+    }
+  }
+
+
+  getPasswordsByGroup({String? groupId}) async{
+    try {
+      String url = dotenv.get('passUnderGroup');
+
+      if(groupId != null){
+        url = "$url/$groupId";
+      }
+
+      var response = await ApiService.getRequest(url);
+
+      if (response[0] == ApiStatus.completed) {
+
+        if(ApiService.handleStatus(response[1])){
+          return null;
+        }
+
+        var data = jsonDecode(response[1].body);
+
+        debugPrint(data.toString());
+
+        if (data['success'] ?? false) {
+
+          List<PasswordModel> passwords = [];
+
+          for(var x in data['data']){
+            passwords.add(PasswordModel.fromJson(x));
+          }
+
+          return passwords;
+        }
+
+      }
+
+      debugPrint(response[1].body.toString());
+      return null;
+
+    } catch (error) {
+      showToast("Something went wrong", true);
+      debugPrint(error.toString());
+      return null;
+    }
+  }
+
 
 
 }
