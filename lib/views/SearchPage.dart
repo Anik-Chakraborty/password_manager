@@ -22,6 +22,8 @@ class _SearchPageState extends State<SearchPage> {
 
   PasswordController passwordController = PasswordController();
 
+  TextEditingController searchTxtCnt = TextEditingController();
+
   List<PasswordModel>? passwords;
 
   @override
@@ -69,6 +71,14 @@ class _SearchPageState extends State<SearchPage> {
                             margin: const EdgeInsets.symmetric(
                                 horizontal: 10, vertical: 5),
                             child: TextFormField(
+                              controller: searchTxtCnt,
+                              onChanged: (value) {
+                                if(value.isNotEmpty && value.length > 2 && context.mounted){
+                                  WidgetsBinding.instance.addPostFrameCallback((_){
+                                    setState(() {});
+                                  });
+                                }
+                              },
                               decoration: InputDecoration(
                                   hintText: "Search...",
                                   hintStyle: GoogleFonts.montserrat(
@@ -105,10 +115,8 @@ class _SearchPageState extends State<SearchPage> {
                           color: AppColors.white, fontSize: 20)),
                 ),
                 const SizedBox(height: 5),
-                passwords != null && passwords!.isNotEmpty
-                    ? passwordCards()
-                    : FutureBuilder(
-                        future: passwordController.getMyPasswords(),
+                FutureBuilder(
+                        future: passwordController.getMyPasswords(query: searchTxtCnt.text),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {

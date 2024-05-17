@@ -11,9 +11,13 @@ class PasswordController extends GetxController{
 
   List<PasswordModel>? passwords;
 
-  getMyPasswords() async{
+  getMyPasswords({String? query}) async{
     try {
       String url = dotenv.get('myPasswords');
+
+      if(query != null){
+        url += "$url?search=$query";
+      }
 
       var response = await ApiService.getRequest(url);
 
