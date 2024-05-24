@@ -211,7 +211,7 @@ class _EditPasswordScreenState extends State<EditPasswordScreen>
                   selectedGrp.toString());
             },
             style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 15),
+                padding: const EdgeInsets.symmetric(vertical: 10),
                 backgroundColor: AppColors.green,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
@@ -223,7 +223,7 @@ class _EditPasswordScreenState extends State<EditPasswordScreen>
                   "Update Password",
                   style: GoogleFonts.montserrat(
                       color: AppColors.white,
-                      fontSize: 25,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold),
                 ),
               ],
@@ -331,7 +331,7 @@ class _EditPasswordScreenState extends State<EditPasswordScreen>
                   selectedGrp.toString());
             },
             style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 15),
+                padding: const EdgeInsets.symmetric(vertical: 10),
                 backgroundColor: AppColors.green,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
@@ -343,7 +343,7 @@ class _EditPasswordScreenState extends State<EditPasswordScreen>
                   "Update Details",
                   style: GoogleFonts.montserrat(
                       color: AppColors.white,
-                      fontSize: 25,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold),
                 ),
               ],

@@ -21,7 +21,7 @@ class Button extends StatelessWidget{
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15),
             ),
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30)
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30)
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

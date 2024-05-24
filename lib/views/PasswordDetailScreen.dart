@@ -152,7 +152,7 @@ class _PasswordDetailScreenState extends State<PasswordDetailScreen> {
                           },
                           style: ElevatedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(
-                                  vertical: 15, horizontal: 10),
+                                  vertical: 10, horizontal: 10),
                               backgroundColor: AppColors.white,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5),
@@ -179,7 +179,7 @@ class _PasswordDetailScreenState extends State<PasswordDetailScreen> {
                           onPressed: () {},
                           style: ElevatedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(
-                                  vertical: 15, horizontal: 10),
+                                  vertical: 10, horizontal: 10),
                               backgroundColor: AppColors.green,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5),

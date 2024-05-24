@@ -160,7 +160,7 @@ class _CreatePasswordState extends State<CreatePassword> {
                             },
                             style: ElevatedButton.styleFrom(
                                 padding:
-                                    const EdgeInsets.symmetric(vertical: 15),
+                                    const EdgeInsets.symmetric(vertical: 10),
                                 backgroundColor: AppColors.secondary,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(30),
@@ -172,7 +172,7 @@ class _CreatePasswordState extends State<CreatePassword> {
                                   "Save",
                                   style: GoogleFonts.montserrat(
                                       color: AppColors.white,
-                                      fontSize: 25,
+                                      fontSize: 20,
                                       fontWeight: FontWeight.bold),
                                 ),
                               ],
