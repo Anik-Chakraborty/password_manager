@@ -35,115 +35,117 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.primary,
-      body: Stack(
-        children: [
-          Center(
-            child: Icon(FontAwesomeIcons.key,
-                color: AppColors.white.withOpacity(0.1), size: 100),
-          ),
-          Container(
-            height: Get.height,
-            padding: const EdgeInsets.all(5),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: Get.width,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const SizedBox(width: 10),
-                      IconButton(
-                        onPressed: () {
-                          Get.back();
-                        },
-                        icon: const Icon(
-                          Icons.arrow_back,
-                          color: AppColors.primary,
+      body: SafeArea(
+        child: Stack(
+          children: [
+            Center(
+              child: Icon(FontAwesomeIcons.key,
+                  color: AppColors.white.withOpacity(0.1), size: 100),
+            ),
+            Container(
+              height: Get.height,
+              padding: const EdgeInsets.all(5),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: Get.width,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const SizedBox(width: 10),
+                        IconButton(
+                          onPressed: () {
+                            Get.back();
+                          },
+                          icon: const Icon(
+                            Icons.arrow_back,
+                            color: AppColors.primary,
+                          ),
+                          style: const ButtonStyle(
+                              shape: MaterialStatePropertyAll(CircleBorder()),
+                              backgroundColor:
+                                  MaterialStatePropertyAll(AppColors.white)),
                         ),
-                        style: const ButtonStyle(
-                            shape: MaterialStatePropertyAll(CircleBorder()),
-                            backgroundColor:
-                                MaterialStatePropertyAll(AppColors.white)),
-                      ),
-                      Expanded(
-                        child: Container(
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 5),
-                            child: TextFormField(
-                              controller: searchTxtCnt,
-                              onChanged: (value) {
-                                if(context.mounted){
-                                  WidgetsBinding.instance.addPostFrameCallback((_){
-                                    setState(() {});
-                                  });
-                                }
-                              },
-                              decoration: InputDecoration(
-                                  hintText: "Search...",
-                                  hintStyle: GoogleFonts.montserrat(
-                                    color: AppColors.primary,
-                                    fontSize: 18,
-                                  ),
-                                  suffixIcon: const Icon(Icons.search,
-                                      color: AppColors.secondary),
-                                  fillColor: AppColors.white,
-                                  filled: true,
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      vertical: 5, horizontal: 10),
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(50),
-                                      borderSide: const BorderSide(
-                                          color: Colors.transparent, width: 1)),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(50),
-                                      borderSide: const BorderSide(
-                                          color: AppColors.secondary,
-                                          width: 1))),
-                              style: GoogleFonts.montserrat(
-                                  color: AppColors.primary, fontSize: 18, fontWeight: FontWeight.bold),
-                            )),
-                      ),
-                    ],
+                        Expanded(
+                          child: Container(
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 5),
+                              child: TextFormField(
+                                controller: searchTxtCnt,
+                                onChanged: (value) {
+                                  if(context.mounted){
+                                    WidgetsBinding.instance.addPostFrameCallback((_){
+                                      setState(() {});
+                                    });
+                                  }
+                                },
+                                decoration: InputDecoration(
+                                    hintText: "Search...",
+                                    hintStyle: GoogleFonts.montserrat(
+                                      color: AppColors.primary,
+                                      fontSize: 18,
+                                    ),
+                                    suffixIcon: const Icon(Icons.search,
+                                        color: AppColors.secondary),
+                                    fillColor: AppColors.white,
+                                    filled: true,
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        vertical: 5, horizontal: 10),
+                                    border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(50),
+                                        borderSide: const BorderSide(
+                                            color: Colors.transparent, width: 1)),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(50),
+                                        borderSide: const BorderSide(
+                                            color: AppColors.secondary,
+                                            width: 1))),
+                                style: GoogleFonts.montserrat(
+                                    color: AppColors.primary, fontSize: 18, fontWeight: FontWeight.bold),
+                              )),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Text("Passwords",
-                      style: GoogleFonts.merriweather(
-                          color: AppColors.white, fontSize: 20)),
-                ),
-                const SizedBox(height: 5),
-                FutureBuilder(
-                        future: passwordController.getMyPasswords(query: searchTxtCnt.text),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const Expanded(
-                                child: Center(child: LoadingWidget()));
-                          } else if (snapshot.connectionState ==
-                              ConnectionState.done) {
-                            passwords = snapshot.data as List<PasswordModel>?;
-
-                            if (passwords == null || passwords!.isEmpty) {
+                  const SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Text("Passwords",
+                        style: GoogleFonts.merriweather(
+                            color: AppColors.white, fontSize: 20)),
+                  ),
+                  const SizedBox(height: 5),
+                  FutureBuilder(
+                          future: passwordController.getMyPasswords(query: searchTxtCnt.text),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Expanded(
+                                  child: Center(child: LoadingWidget()));
+                            } else if (snapshot.connectionState ==
+                                ConnectionState.done) {
+                              passwords = snapshot.data as List<PasswordModel>?;
+        
+                              if (passwords == null || passwords!.isEmpty) {
+                                return Text("Data not found",
+                                    style: GoogleFonts.montserrat(
+                                        color: AppColors.white, fontSize: 18));
+                              }
+        
+                              return passwordCards();
+                            } else {
                               return Text("Data not found",
                                   style: GoogleFonts.montserrat(
                                       color: AppColors.white, fontSize: 18));
                             }
-
-                            return passwordCards();
-                          } else {
-                            return Text("Data not found",
-                                style: GoogleFonts.montserrat(
-                                    color: AppColors.white, fontSize: 18));
-                          }
-                        },
-                      )
-              ],
+                          },
+                        )
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

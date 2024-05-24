@@ -92,78 +92,80 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           ],
         ),
       ),
-      body: Stack(
-        children: [
-          SizedBox(
-            height: Get.height,
-            child: Column(
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(top: 30, bottom: 10),
-                  padding: const EdgeInsets.all(20),
-                  alignment: Alignment.center,
-                  decoration: const BoxDecoration(
-                      color: AppColors.white, shape: BoxShape.circle),
-                  child: const Icon(FontAwesomeIcons.user,
-                      color: AppColors.primary, size: 40),
-                ),
-                user != null
-                    ? userInfo()
-                    : FutureBuilder(
-                        future: userController.getUserProfile(),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const Expanded(
-                                child: Center(child: LoadingWidget()));
-                          } else if (snapshot.connectionState ==
-                              ConnectionState.done) {
-                            user = snapshot.data as UserProfileModel?;
-
-                            if (user == null) {
+      body: SafeArea(
+        child: Stack(
+          children: [
+            SizedBox(
+              height: Get.height,
+              child: Column(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(top: 30, bottom: 10),
+                    padding: const EdgeInsets.all(20),
+                    alignment: Alignment.center,
+                    decoration: const BoxDecoration(
+                        color: AppColors.white, shape: BoxShape.circle),
+                    child: const Icon(FontAwesomeIcons.user,
+                        color: AppColors.primary, size: 40),
+                  ),
+                  user != null
+                      ? userInfo()
+                      : FutureBuilder(
+                          future: userController.getUserProfile(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Expanded(
+                                  child: Center(child: LoadingWidget()));
+                            } else if (snapshot.connectionState ==
+                                ConnectionState.done) {
+                              user = snapshot.data as UserProfileModel?;
+        
+                              if (user == null) {
+                                return Text("Data not found",
+                                    style: GoogleFonts.montserrat(
+                                        color: AppColors.white, fontSize: 18));
+                              }
+        
+                              sltOccupation =
+                                  int.parse(user?.userinfo?.occupationId ?? "-1");
+        
+                              return userInfo();
+                            } else {
                               return Text("Data not found",
                                   style: GoogleFonts.montserrat(
                                       color: AppColors.white, fontSize: 18));
                             }
-
-                            sltOccupation =
-                                int.parse(user?.userinfo?.occupationId ?? "-1");
-
-                            return userInfo();
-                          } else {
-                            return Text("Data not found",
-                                style: GoogleFonts.montserrat(
-                                    color: AppColors.white, fontSize: 18));
-                          }
-                        },
-                      )
-              ],
-            ),
-          ),
-          Positioned(
-              top: 20,
-              right: 20,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      setState(() {
-                        allowEdit = !allowEdit;
-                      });
-                    },
-                    icon: Icon(
-                      Icons.edit,
-                      color: allowEdit ? AppColors.primary : AppColors.white,
-                    ),
-                    style: ButtonStyle(
-                        shape: const MaterialStatePropertyAll(CircleBorder()),
-                        backgroundColor: MaterialStatePropertyAll(
-                            allowEdit ? AppColors.white : Colors.transparent)),
-                  )
+                          },
+                        )
                 ],
-              )),
-        ],
+              ),
+            ),
+            Positioned(
+                top: 20,
+                right: 20,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          allowEdit = !allowEdit;
+                        });
+                      },
+                      icon: Icon(
+                        Icons.edit,
+                        color: allowEdit ? AppColors.primary : AppColors.white,
+                      ),
+                      style: ButtonStyle(
+                          shape: const MaterialStatePropertyAll(CircleBorder()),
+                          backgroundColor: MaterialStatePropertyAll(
+                              allowEdit ? AppColors.white : Colors.transparent)),
+                    )
+                  ],
+                )),
+          ],
+        ),
       ),
     );
   }
