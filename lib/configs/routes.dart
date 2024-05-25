@@ -6,6 +6,7 @@ import 'package:password_manager/views/GroupWisePassword.dart';
 import 'package:password_manager/views/LoginScreen.dart';
 import 'package:password_manager/views/NavigationScreen.dart';
 import 'package:password_manager/views/PasswordDetailScreen.dart';
+import 'package:password_manager/views/RecordScreen.dart';
 import 'package:password_manager/views/SearchPage.dart';
 import 'package:password_manager/views/SplashScreen.dart';
 import 'package:password_manager/views/UserProfileScreen.dart';
@@ -21,6 +22,7 @@ class AppRoutes {
   static const String uptPass = "/uptPass";
   static const String categories = "/categories";
   static const String groups = "/groups";
+  static const String records = "/records";
 
 
 
@@ -37,5 +39,6 @@ final getRoutes = [
   GetPage(name: AppRoutes.search, page: () => const SearchPage()),
   GetPage(name: AppRoutes.uptPass, page: () => const EditPasswordScreen()),
   GetPage(name: AppRoutes.categories, page: () => const CategoryWisePassword()),
-  GetPage(name: AppRoutes.groups, page: () => const GroupWisePassword())
+  GetPage(name: AppRoutes.groups, page: () => const GroupWisePassword()),
+  GetPage(name: AppRoutes.records, page: () => RecordScreen())
 ];

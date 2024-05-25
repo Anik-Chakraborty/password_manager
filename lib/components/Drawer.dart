@@ -70,6 +70,7 @@ class _SideDrawerState extends State<SideDrawer> {
                item("Category", FontAwesomeIcons.layerGroup, AppRoutes.categories),
                item("Group", FontAwesomeIcons.userGroup, AppRoutes.groups),
                item("Lost Device", FontAwesomeIcons.mobile, AppRoutes.categories),
+               item("Records", FontAwesomeIcons.clockRotateLeft, AppRoutes.records)
              ],
           ),
         ),
