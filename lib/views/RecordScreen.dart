@@ -51,27 +51,16 @@ class _RecordScreenState extends State<RecordScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primary,
+      backgroundColor: AppColors.offWhite,
       appBar: AppBar(
         title: Text("Records",
-            style: GoogleFonts.merriweather(
-                fontSize: 20,
+            style: GoogleFonts.montserrat(
+                fontSize: 22,
                 fontWeight: FontWeight.bold,
-                color: AppColors.white)),
-        backgroundColor: AppColors.primary,
-        centerTitle: true,
-        leading: IconButton(
-          onPressed: () {
-            Get.back();
-          },
-          icon: const Icon(
-            Icons.arrow_back,
-            color: AppColors.primary,
-          ),
-          style: const ButtonStyle(
-              shape: MaterialStatePropertyAll(CircleBorder()),
-              backgroundColor: MaterialStatePropertyAll(AppColors.white)),
-        ),
+                color: AppColors.black)),
+        centerTitle: false,
+        backgroundColor: AppColors.offWhite,
+        surfaceTintColor: Colors.transparent,
       ),
       body: SafeArea(
         child: RefreshIndicator(
@@ -89,14 +78,14 @@ class _RecordScreenState extends State<RecordScreen>
               children: [
                 TabBar(
                   isScrollable: true,
-                  labelStyle: GoogleFonts.montserrat(),
+                  labelStyle: GoogleFonts.montserrat(color: AppColors.white),
                   tabAlignment: TabAlignment.start,
                   unselectedLabelStyle: GoogleFonts.montserrat(),
                   tabs: tabs(),
                   controller: tabCnt,
-                  labelColor: AppColors.white,
-                  unselectedLabelColor: AppColors.white.withOpacity(0.5),
-                  indicatorColor: AppColors.secondary,
+                  labelColor: AppColors.blue,
+                  unselectedLabelColor: Colors.grey,
+                  indicatorColor: AppColors.blue,
                 ),
                 Expanded(
                   child: TabBarView(controller: tabCnt, children: [
@@ -195,10 +184,8 @@ class _RecordScreenState extends State<RecordScreen>
   header() {
     return Container(
       padding: const EdgeInsets.all(5),
-      margin: const EdgeInsets.all(5),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: AppColors.white,
-        borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -215,7 +202,7 @@ class _RecordScreenState extends State<RecordScreen>
     return Text(txt,
         textAlign: TextAlign.center,
         style: GoogleFonts.montserrat(
-            color: AppColors.primary,
+            color: AppColors.blue,
             fontWeight: FontWeight.bold,
             fontSize: 16));
   }
@@ -307,7 +294,7 @@ class _RecordScreenState extends State<RecordScreen>
   dataText(String txt) {
     return Text(txt,
         textAlign: TextAlign.center,
-        style: GoogleFonts.montserrat(color: AppColors.white, fontSize: 14));
+        style: GoogleFonts.montserrat(color: AppColors.black, fontSize: 14));
   }
 
   String formatDateString(String isoDateString) {

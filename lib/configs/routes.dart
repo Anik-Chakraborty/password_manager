@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:password_manager/views/AuthenticatorScreen.dart';
 import 'package:password_manager/views/CategoryWisePassword.dart';
 import 'package:password_manager/views/CreatePassword.dart';
 import 'package:password_manager/views/EditPassword.dart';
@@ -23,9 +24,7 @@ class AppRoutes {
   static const String categories = "/categories";
   static const String groups = "/groups";
   static const String records = "/records";
-
-
-
+  static const String authenticator = "/authenticator";
 
 }
 
@@ -40,5 +39,6 @@ final getRoutes = [
   GetPage(name: AppRoutes.uptPass, page: () => const EditPasswordScreen()),
   GetPage(name: AppRoutes.categories, page: () => const CategoryWisePassword()),
   GetPage(name: AppRoutes.groups, page: () => const GroupWisePassword()),
-  GetPage(name: AppRoutes.records, page: () => RecordScreen())
+  GetPage(name: AppRoutes.records, page: () => RecordScreen()),
+  GetPage(name: AppRoutes.authenticator, page: () => const AuthenticatorScreen())
 ];

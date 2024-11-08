@@ -34,9 +34,9 @@ class _LoginScreenState extends State<LoginScreen> {
               const Expanded(child: SizedBox()),
               Container(
                   padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius: BorderRadius.circular(10)),
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                      color: AppColors.white),
                   child: const Icon(FontAwesomeIcons.key,
                       color: AppColors.primary, size: 50)),
               const SizedBox(height: 10),
@@ -96,7 +96,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 30)
+              const SizedBox(height: 30),
+              const Expanded(child: SizedBox())
             ],
           ),
         ));

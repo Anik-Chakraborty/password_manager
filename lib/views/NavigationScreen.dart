@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:motion_tab_bar/MotionTabBarController.dart';
 import 'package:password_manager/components/BottomNavBar.dart';
+import 'package:password_manager/views/AllPasswordScreen.dart';
 import 'package:password_manager/views/HomeScreen.dart';
-import 'package:password_manager/views/LogOutScreen.dart';
+import 'package:password_manager/views/SettingScreen.dart';
 import 'package:password_manager/views/UserProfileScreen.dart';
 
 class NavigationScreen extends StatefulWidget{
@@ -11,24 +13,30 @@ class NavigationScreen extends StatefulWidget{
 
 class _NavigationScreenState extends State<NavigationScreen> with TickerProviderStateMixin{
 
-  late TabController tabController;
+  MotionTabBarController? motionTabBarController;
 
   @override
   void initState() {
-    tabController = TabController(length: 3, vsync: this, initialIndex: 1);
+    motionTabBarController = MotionTabBarController(
+      initialIndex: 0,
+      length: 3,
+      vsync: this,
+    );
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        bottomNavigationBar: BottomNavBar(controller: tabController),
+        bottomNavigationBar: BottomNavBar(controller: motionTabBarController),
         body: TabBarView(
-          controller: tabController,
+          controller: motionTabBarController,
           children: [
-            const UserProfileScreen(),
+            // const UserProfileScreen(),
             const HomeScreen(),
-            LogOutScreen(tabController: tabController)
+            const AllPasswordScreen(),
+            SettingScreen(tabController: motionTabBarController)
           ],
         ),
     );

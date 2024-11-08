@@ -69,7 +69,7 @@ class _SideDrawerState extends State<SideDrawer> {
                const SizedBox(height: 30),
                item("Category", FontAwesomeIcons.layerGroup, AppRoutes.categories),
                item("Group", FontAwesomeIcons.userGroup, AppRoutes.groups),
-               item("Lost Device", FontAwesomeIcons.mobile, AppRoutes.categories),
+               item("Authenticator", FontAwesomeIcons.google, AppRoutes.authenticator),
                item("Records", FontAwesomeIcons.clockRotateLeft, AppRoutes.records)
              ],
           ),

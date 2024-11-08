@@ -7,7 +7,7 @@ showToast( String msg, bool error) {
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
       timeInSecForIosWeb: 1,
-      backgroundColor: error ? AppColors.secondary.withOpacity(0.5) : AppColors.green.withOpacity(0.5),
+      backgroundColor: error ? AppColors.secondary.withOpacity(0.5) : AppColors.blue.withOpacity(0.5),
       textColor: AppColors.white,
       fontSize: 14,
       webPosition: 'center',

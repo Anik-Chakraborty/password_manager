@@ -19,7 +19,6 @@ class AuthController extends GetxController {
   }
 
   Future<bool> login(String email, String password) async {
-
     await userCtrl.clearUserDetails();
 
     String? isEmailValidated = Validate.email(email);
@@ -78,5 +77,42 @@ class AuthController extends GetxController {
     Get.back();
     await userCtrl.clearUserDetails();
     Get.offAllNamed(AppRoutes.logIn);
+  }
+
+  Future<Map?> showAuthenticatorQR() async {
+    try {
+      String url = dotenv.get('qrDetail');
+      var response = await ApiService.postRequest(url, {});
+
+      if (response[0] == ApiStatus.completed) {
+        var data = jsonDecode(response[1].body);
+        if (data['success']) {
+          return data["data"];
+        }
+      }
+      return null;
+    } catch (error) {
+      debugPrint(error.toString());
+      return null;
+    }
+  }
+
+
+  Future<bool> check2FA(String value) async {
+    try {
+      String url = dotenv.get('check2FA');
+      var response = await ApiService.postRequest(url, {
+        "one_time_password" : value
+      });
+
+      if (response[0] == ApiStatus.completed) {
+        var data = jsonDecode(response[1].body);
+        return data['success'] ?? false;
+      }
+      return false;
+    } catch (error) {
+      debugPrint(error.toString());
+      return false;
+    }
   }
 }

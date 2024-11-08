@@ -149,6 +149,9 @@ class UserController{
 
         if (data['status'] ?? false) {
 
+          UserModel user = getUserDetails();
+
+          storeUserDetails(email: email, role: name, id: user.id, token: user.token);
           showToast("Updated Successfully", false);
 
           return true;

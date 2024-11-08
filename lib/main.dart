@@ -6,7 +6,7 @@ import 'package:password_manager/configs/routes.dart';
 
 void main() async{
 
-  await GetStorage.init();
+  // await GetStorage.init();
 
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");

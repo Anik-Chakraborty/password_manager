@@ -34,7 +34,7 @@ Future<bool> showWarningDialog() async {
                   style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
                           vertical: 5, horizontal: 20),
-                      backgroundColor: AppColors.green,
+                      backgroundColor: AppColors.blue,
                       surfaceTintColor: Colors.transparent,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30))),

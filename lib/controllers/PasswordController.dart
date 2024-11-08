@@ -181,5 +181,78 @@ class PasswordController extends GetxController{
   }
 
 
+  Future<String?> showPassword(String id) async{
+    try {
+
+      debugPrint(id);
+      showLoadingDialog();
+
+      String url = dotenv.get('showPassword');
+
+      var response = await ApiService.postRequest(url, {"password_id" : id});
+
+      Get.back();
+
+      if (response[0] == ApiStatus.completed) {
+
+        if(ApiService.handleStatus(response[1])){
+          return null;
+        }
+
+        var data = jsonDecode(response[1].body);
+
+        debugPrint(data.toString());
+
+        if (data['success'] ?? false) {
+          return data['data']['password'] ?? "";
+        }
+
+      }
+
+      debugPrint(response[1].body.toString());
+      return null;
+
+    } catch (error) {
+      showToast("Something went wrong", true);
+      debugPrint(error.toString());
+      return null;
+    }
+  }
+
+  verifyPassword(String id) async{
+    try {
+
+      String url = dotenv.get('addToVerify');
+
+      var response = await ApiService.postRequest(url, {"password_id" : id});
+
+
+      if (response[0] == ApiStatus.completed) {
+
+        if(ApiService.handleStatus(response[1])){
+          return null;
+        }
+
+        var data = jsonDecode(response[1].body);
+
+        debugPrint(data.toString());
+
+        if (data['success'] ?? false) {
+          return true;
+        }
+
+      }
+
+      debugPrint(response[1].body.toString());
+      return null;
+
+    } catch (error) {
+      showToast("Something went wrong", true);
+      debugPrint(error.toString());
+      return null;
+    }
+  }
+
+
 
 }

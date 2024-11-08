@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -15,12 +16,21 @@ class SplashScreen extends StatefulWidget{
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMixin{
+
+  late AnimationController controller;
+  late Animation<double> animation;
 
   UserController userController = UserController();
 
   @override
   void initState() {
+    controller = AnimationController(
+        duration: const Duration(seconds: 1), vsync: this)..addListener(() =>
+        setState(() {}));
+    animation = Tween(begin: -500.0, end: 0.0).animate(controller);
+    controller.forward();
+
 
     UserModel userModel = userController.getUserDetails();
 
@@ -45,28 +55,59 @@ class _SplashScreenState extends State<SplashScreen> {
       statusBarColor: AppColors.primary, // status bar color
     ));
 
-
     return Scaffold(
-      backgroundColor: AppColors.primary,
-      body: Container(
+      backgroundColor: AppColors.white,
+      body: Stack(
         alignment: Alignment.center,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: AppColors.white,
-                  borderRadius: BorderRadius.circular(10)
+        children: [
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              Positioned(
+                bottom: Get.height * 0.25,
+                child: Transform.translate(
+                  offset: Offset( 0.0, animation.value),
+                  child: Container(
+                    height: Get.height,
+                    width: Get.height,
+                    decoration: BoxDecoration(
+                        color: AppColors.secondary,
+                        borderRadius: BorderRadius.circular(1000)
+                    ),
+                  ),
                 ),
-                child: const Icon(FontAwesomeIcons.key, color: AppColors.primary, size: 50)),
-            const SizedBox(height: 10),
-            Text("Password Manager", style: GoogleFonts.merriweather(
-              color: AppColors.white, fontSize: 20, fontWeight: FontWeight.bold
-            ))
-          ],
-        ),
+              ),
+              Positioned(
+                bottom: Get.height * 0.3,
+                child: Transform.translate(
+                  offset: Offset( 0.0, animation.value),
+                  child: Container(
+                    height: Get.height,
+                    width: Get.height,
+                    decoration: BoxDecoration(
+                      color: AppColors.primary,
+                      borderRadius: BorderRadius.circular(1000)
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Positioned(
+            top: Get.height * 0.1,
+              child: AnimationConfiguration.synchronized(
+                child: FadeInAnimation(
+                    duration: const Duration(seconds: 2),
+                    delay: const Duration(seconds: 2),
+                    child: ScaleAnimation(
+                        duration: const Duration(seconds: 2),
+                        delay: const Duration(seconds: 1),
+                        child: Image.asset(
+                          "assets/images/lock.png",
+                        ))),
+              ),
+          ),
+        ],
       ),
     );
   }

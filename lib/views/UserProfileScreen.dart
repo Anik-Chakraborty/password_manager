@@ -1,3 +1,5 @@
+import 'package:bootstrap_icons/bootstrap_icons.dart';
+import 'package:clay_containers/clay_containers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -24,7 +26,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
   int sltOccupation = -1;
 
-  TextEditingController nameTxtCnt = TextEditingController();
+  TextEditingController nameTxtCnt = TextEditingController(text: "Anik");
   TextEditingController emailTxtCnt = TextEditingController();
   TextEditingController genderTxtCnt = TextEditingController();
   TextEditingController phnTxtCnt = TextEditingController();
@@ -41,131 +43,151 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primary,
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Visibility(
-        visible: allowEdit,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      backgroundColor: AppColors.white,
+      appBar: AppBar(
+        title: Text("Edit Profile",
+            style: GoogleFonts.montserrat(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: AppColors.black)),
+        centerTitle: false,
+        backgroundColor: AppColors.offWhite,
+        surfaceTintColor: Colors.transparent,
+        actions: [TextButton(
+          onPressed: () async {
+            setState(() {
+              allowEdit = false;
+            });
+            showLoadingDialog();
+            await userController.updateUserProfile(
+                nameTxtCnt.text,
+                emailTxtCnt.text,
+                phnTxtCnt.text,
+                genderTxtCnt.text,
+                addTxtCnt.text,
+                zipTxtCnt.text,
+                nidTxtCnt.text,
+                fbTxtCnt.text,
+                twtTxtCnt.text,
+                lnkTxtCnt.text,
+                instrTxtCnt.text,
+                sltOccupation.toString());
+            setState(() {
+              user = null;
+            });
+            Get.back();
+          },
+          style: btnStyle(Colors.transparent),
+          child: Text("Save ",
+              style: GoogleFonts.montserrat(
+                  color: AppColors.black,
+                  fontSize: 16)),
+        )],
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            SizedBox(
-              width: Get.width * 0.4,
-              child: TextButton(
-                onPressed: () async{
-                  setState(() {
-                    allowEdit = false;
-                  });
-                  showLoadingDialog();
-                  await userController.updateUserProfile(
-                    nameTxtCnt.text, emailTxtCnt.text, phnTxtCnt.text, genderTxtCnt.text, addTxtCnt.text, zipTxtCnt.text, nidTxtCnt.text, fbTxtCnt.text, twtTxtCnt.text, lnkTxtCnt.text, instrTxtCnt.text, sltOccupation.toString()
-                  );
-                  setState(() {
-                    user = null;
-                  });
-                  Get.back();
-                  },
-                style: btnStyle(AppColors.green),
-                child: Text("Save",
-                    style: GoogleFonts.montserrat(
-                        color: AppColors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold)),
-              ),
+            Hero(
+              tag: "user-profile",
+              child: Container(
+                  height: Get.height * 0.3,
+                  width: double.infinity,
+                  padding: const EdgeInsets.only(top: 20),
+                  alignment: Alignment.topCenter,
+                  decoration:
+                      const BoxDecoration(color: AppColors.offWhite, boxShadow: [
+                    BoxShadow(
+                        blurStyle: BlurStyle.inner,
+                        color: Colors.black12,
+                        spreadRadius: 5,
+                        blurRadius: 10)
+                  ]),
+                  child: Stack(
+                    fit: StackFit.loose,
+                    alignment: AlignmentDirectional.bottomEnd,
+                    children: [
+                      ClayContainer(
+                        color: AppColors.offWhite,
+                        height: Get.width * 0.4,
+                        width: Get.width * 0.4,
+                        borderRadius: 100,
+                        child: Center(
+                          child: Material(
+                            color: Colors.transparent,
+                            child: Text(nameTxtCnt.text.substring(0, 1),
+                                style: GoogleFonts.montserrat(
+                                    color: Colors.black,
+                                    fontSize: 80,
+                                    fontWeight: FontWeight.bold)),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        width: 40,
+                        height: 40,
+                        alignment: Alignment.center,
+                        decoration: const BoxDecoration(
+                            shape: BoxShape.circle, color: AppColors.blue),
+                        child: const Icon(BootstrapIcons.shield_fill,
+                            color: AppColors.white, size: 20),
+                      )
+                    ],
+                  )),
             ),
-            SizedBox(
-              width: Get.width * 0.4,
-              child: TextButton(
-                onPressed: () {
-                  setState(() {
-                    allowEdit = false;
-                    sltOccupation = int.parse(user?.userinfo?.occupationId ?? "-1");
-                  });
-                },
-                style: btnStyle(AppColors.secondary),
-                child: Text("Cancel",
-                    style: GoogleFonts.montserrat(
-                        color: AppColors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold)),
-              ),
-            )
+            user != null
+                ? userInfo()
+                : FutureBuilder(
+                    future: userController.getUserProfile(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Container(
+                            alignment: Alignment.center,
+                            height: Get.height * 0.6,
+                            child: const LoadingWidget());
+                      } else if (snapshot.connectionState ==
+                          ConnectionState.done) {
+                        user = snapshot.data as UserProfileModel?;
+
+                        if (user == null) {
+                          return Container(
+                            alignment: Alignment.center,
+                            height: Get.height * 0.6,
+                            child: Text("Data not found",
+                                style: GoogleFonts.montserrat(
+                                    color: AppColors.white, fontSize: 18)),
+                          );
+                        }
+
+                        sltOccupation =
+                            int.parse(user?.userinfo?.occupationId ?? "-1");
+
+                        return userInfo();
+                      } else {
+                        return Container(
+                          alignment: Alignment.center,
+                          height: Get.height * 0.6,
+                          child: Text("Data not found",
+                              style: GoogleFonts.montserrat(
+                                  color: AppColors.white, fontSize: 18)),
+                        );
+                      }
+                    },
+                  )
           ],
         ),
       ),
-      body: SafeArea(
-        child: Stack(
-          children: [
-            SizedBox(
-              height: Get.height,
-              child: Column(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(top: 30, bottom: 10),
-                    padding: const EdgeInsets.all(20),
-                    alignment: Alignment.center,
-                    decoration: const BoxDecoration(
-                        color: AppColors.white, shape: BoxShape.circle),
-                    child: const Icon(FontAwesomeIcons.user,
-                        color: AppColors.primary, size: 40),
-                  ),
-                  user != null
-                      ? userInfo()
-                      : FutureBuilder(
-                          future: userController.getUserProfile(),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return const Expanded(
-                                  child: Center(child: LoadingWidget()));
-                            } else if (snapshot.connectionState ==
-                                ConnectionState.done) {
-                              user = snapshot.data as UserProfileModel?;
-        
-                              if (user == null) {
-                                return Text("Data not found",
-                                    style: GoogleFonts.montserrat(
-                                        color: AppColors.white, fontSize: 18));
-                              }
-        
-                              sltOccupation =
-                                  int.parse(user?.userinfo?.occupationId ?? "-1");
-        
-                              return userInfo();
-                            } else {
-                              return Text("Data not found",
-                                  style: GoogleFonts.montserrat(
-                                      color: AppColors.white, fontSize: 18));
-                            }
-                          },
-                        )
-                ],
-              ),
-            ),
-            Positioned(
-                top: 20,
-                right: 20,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        setState(() {
-                          allowEdit = !allowEdit;
-                        });
-                      },
-                      icon: Icon(
-                        Icons.edit,
-                        color: allowEdit ? AppColors.primary : AppColors.white,
-                      ),
-                      style: ButtonStyle(
-                          shape: const MaterialStatePropertyAll(CircleBorder()),
-                          backgroundColor: MaterialStatePropertyAll(
-                              allowEdit ? AppColors.white : Colors.transparent)),
-                    )
-                  ],
-                )),
-          ],
-        ),
+    );
+  }
+
+  labelText(String title) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Text(
+        title,
+        style: GoogleFonts.montserrat(
+            color: Colors.grey, fontSize: 14, fontWeight: FontWeight.bold),
       ),
     );
   }
@@ -183,175 +205,174 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     instrTxtCnt.text = user?.userinfo?.instagramProfileUrl ?? "";
     zipTxtCnt.text = user?.userinfo?.zipCode ?? "";
 
-    return Expanded(
-        child: Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-      decoration: BoxDecoration(
-          color: AppColors.white, borderRadius: BorderRadius.circular(10)),
-      child: Stack(
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Center(
-            child: Icon(FontAwesomeIcons.key,
-                color: AppColors.primary.withOpacity(0.05), size: 100),
+          labelText("Username"),
+          TextInputWidget(
+            controller: nameTxtCnt,
+            hintText: "",
+            isObscureText: false,
+            keyboardType: TextInputType.text,
+            suffixIcon: BootstrapIcons.person_fill,
           ),
-          ListView(
-            shrinkWrap: true,
-            children: [
-              const SizedBox(height: 5),
-              TextInputWidget(
-                controller: nameTxtCnt,
-                hintText: "",
-                isObscureText: false,
-                keyboardType: TextInputType.text,
-                labelText: "Name",
-                readOnly: !allowEdit,
-              ),
-              const SizedBox(height: 20),
-              TextInputWidget(
-                  controller: emailTxtCnt,
-                  hintText: "",
-                  isObscureText: false,
-                  keyboardType: TextInputType.text,
-                  labelText: "Email",
-                  readOnly: !allowEdit),
-              const SizedBox(height: 20),
-              TextInputWidget(
-                  controller: phnTxtCnt,
-                  hintText: "",
-                  isObscureText: false,
-                  keyboardType: TextInputType.text,
-                  inputFormatter: [
-                    FilteringTextInputFormatter.digitsOnly
-                  ],
-                  labelText: "Phone",
-                  readOnly: !allowEdit),
-              const SizedBox(height: 20),
-              TextInputWidget(
-                  controller: genderTxtCnt,
-                  hintText: "",
-                  isObscureText: false,
-                  keyboardType: TextInputType.text,
-                  labelText: "Gender",
-                  readOnly: !allowEdit),
-              const SizedBox(height: 20),
-              TextInputWidget(
-                  controller: addTxtCnt,
-                  hintText: "",
-                  isObscureText: false,
-                  keyboardType: TextInputType.text,
-                  labelText: "Address",
-                  readOnly: !allowEdit),
-              const SizedBox(height: 20),
-              TextInputWidget(
-                  controller: zipTxtCnt,
-                  hintText: "",
-                  isObscureText: false,
-                  keyboardType: TextInputType.text,
-                  inputFormatter: [
-                    FilteringTextInputFormatter.digitsOnly
-                  ],
-                  labelText: "Zip Code",
-                  readOnly: !allowEdit),
-              const SizedBox(height: 20),
-              TextInputWidget(
-                  controller: nidTxtCnt,
-                  hintText: "",
-                  isObscureText: false,
-                  keyboardType: TextInputType.text,
-                  labelText: "NID / Password",
-                  readOnly: !allowEdit),
-              const SizedBox(height: 20),
-              TextInputWidget(
-                  controller: fbTxtCnt,
-                  hintText: "",
-                  isObscureText: false,
-                  keyboardType: TextInputType.text,
-                  labelText: "Facebook",
-                  readOnly: !allowEdit),
-              const SizedBox(height: 20),
-              TextInputWidget(
-                  controller: twtTxtCnt,
-                  hintText: "",
-                  isObscureText: false,
-                  keyboardType: TextInputType.text,
-                  labelText: "Twitter (X)",
-                  readOnly: !allowEdit),
-              const SizedBox(height: 20),
-              TextInputWidget(
-                  controller: lnkTxtCnt,
-                  hintText: "",
-                  isObscureText: false,
-                  keyboardType: TextInputType.text,
-                  labelText: "LinkedIn",
-                  readOnly: !allowEdit),
-              const SizedBox(height: 20),
-              TextInputWidget(
-                  controller: instrTxtCnt,
-                  hintText: "",
-                  isObscureText: false,
-                  keyboardType: TextInputType.text,
-                  labelText: "Instagram",
-                  readOnly: !allowEdit),
-              const SizedBox(height: 20),
-              Text("Occupation", style: GoogleFonts.montserrat(
-                color: AppColors.secondary, fontSize: 16
-              )),
-              const SizedBox(height: 5),
-              SizedBox(
-                height: 100,
-                child: Center(
-                  child: ListView.builder(
-                      itemBuilder: (context, index) {
-                        return InkWell(
-                          onTap: () {
-                            if(allowEdit){
-                              setState(() {
-                                sltOccupation = user?.occupationList?.data?[index].id ?? -1;
-                              });
-                            }
-                          },
-                          child: Container(
-                            width: 100,
-                            alignment: Alignment.center,
-                            margin: const EdgeInsets.symmetric(horizontal: 5),
-                            decoration: BoxDecoration(
-                                color: user!.occupationList!.data![index].id ==
-                                        sltOccupation
-                                    ? AppColors.primary
-                                    : Colors.transparent,
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(
-                                    width: 1,
-                                    color: user!.occupationList!.data![index].id !=
-                                            sltOccupation
-                                        ? AppColors.primary
-                                        : Colors.transparent)),
-                            child: Text(
-                                user?.occupationList?.data?[index].occupationName ??
-                                    "",
-                                maxLines: 4,
-                                overflow: TextOverflow.ellipsis,
-                                style: GoogleFonts.montserrat(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                    color: user!.occupationList!.data![index].id ==
-                                            sltOccupation
-                                        ? AppColors.white
-                                        : AppColors.primary)),
-                          ),
-                        );
+          const SizedBox(height: 20),
+          labelText("Email"),
+          TextInputWidget(
+            controller: emailTxtCnt,
+            hintText: "",
+            isObscureText: false,
+            keyboardType: TextInputType.text,
+            suffixIcon: BootstrapIcons.envelope_at_fill,
+          ),
+          const SizedBox(height: 20),
+          labelText("Phone"),
+          TextInputWidget(
+            controller: phnTxtCnt,
+            hintText: "",
+            isObscureText: false,
+            keyboardType: TextInputType.text,
+            inputFormatter: [FilteringTextInputFormatter.digitsOnly],
+            suffixIcon: BootstrapIcons.telephone_fill,
+          ),
+          const SizedBox(height: 20),
+          labelText("Gender"),
+          TextInputWidget(
+            controller: genderTxtCnt,
+            hintText: "",
+            isObscureText: false,
+            keyboardType: TextInputType.text,
+            suffixIcon: Icons.man_4,
+          ),
+          const SizedBox(height: 20),
+          labelText("Address"),
+          TextInputWidget(
+            controller: addTxtCnt,
+            hintText: "",
+            isObscureText: false,
+            keyboardType: TextInputType.text,
+            suffixIcon: FontAwesomeIcons.locationArrow,
+          ),
+          const SizedBox(height: 20),
+          labelText("Zipcode"),
+          TextInputWidget(
+            controller: zipTxtCnt,
+            hintText: "",
+            isObscureText: false,
+            keyboardType: TextInputType.text,
+            inputFormatter: [FilteringTextInputFormatter.digitsOnly],
+            suffixIcon: BootstrapIcons.pin_angle_fill,
+          ),
+          const SizedBox(height: 20),
+          labelText("NID"),
+          TextInputWidget(
+            controller: nidTxtCnt,
+            hintText: "",
+            isObscureText: false,
+            keyboardType: TextInputType.text,
+            suffixIcon: BootstrapIcons.person_badge_fill,
+          ),
+          const SizedBox(height: 20),
+          labelText("Facebook"),
+          TextInputWidget(
+              controller: fbTxtCnt,
+              hintText: "",
+              isObscureText: false,
+              keyboardType: TextInputType.text,
+              suffixIcon: BootstrapIcons.facebook),
+          const SizedBox(height: 20),
+          labelText("Twitter (X)"),
+          TextInputWidget(
+            controller: twtTxtCnt,
+            hintText: "",
+            isObscureText: false,
+            keyboardType: TextInputType.text,
+            suffixIcon: BootstrapIcons.twitter_x,
+          ),
+          const SizedBox(height: 20),
+          labelText("LinkedIn"),
+          TextInputWidget(
+            controller: lnkTxtCnt,
+            hintText: "",
+            isObscureText: false,
+            keyboardType: TextInputType.text,
+            suffixIcon: BootstrapIcons.linkedin,
+          ),
+          const SizedBox(height: 20),
+          labelText("Instagram"),
+          TextInputWidget(
+            controller: instrTxtCnt,
+            hintText: "",
+            isObscureText: false,
+            keyboardType: TextInputType.text,
+            suffixIcon: BootstrapIcons.instagram,
+          ),
+          const SizedBox(height: 20),
+          labelText("Occupation"),
+          const SizedBox(height: 5),
+          SizedBox(
+            height: 100,
+            child: Center(
+              child: ListView.builder(
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          sltOccupation =
+                              user?.occupationList?.data?[index].id ?? -1;
+                        });
                       },
-                      itemCount: user?.occupationList?.data?.length ?? 0,
-                      scrollDirection: Axis.horizontal),
-                ),
-              ),
-              const SizedBox(height: 80),
-            ],
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                        child: ClayContainer(
+                          width: 100,
+                          borderRadius: 10,
+                          color: AppColors.offWhite,
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Text(
+                                  user?.occupationList?.data?[index]
+                                          .occupationName ??
+                                      "",
+                                  maxLines: 4,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.montserrat(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.blue)),
+                              if (user!.occupationList!.data![index].id ==
+                                  sltOccupation) ...[
+                                Positioned(
+                                    top: 0,
+                                    right: 0,
+                                    child: Checkbox(
+                                      value: true,
+                                      onChanged: (value) {},
+                                      activeColor: AppColors.blue,
+                                      checkColor: AppColors.white,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(3)),
+                                    ))
+                              ]
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                  itemCount: user?.occupationList?.data?.length ?? 0,
+                  scrollDirection: Axis.horizontal),
+            ),
           ),
+          const SizedBox(height: 80),
         ],
       ),
-    ));
+    );
   }
 
   btnStyle(Color bg) {

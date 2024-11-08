@@ -1,10 +1,12 @@
+import 'package:bootstrap_icons/bootstrap_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:motion_tab_bar/MotionTabBar.dart';
+import 'package:motion_tab_bar/MotionTabBarController.dart';
 import 'package:password_manager/configs/colors.dart';
 
 class BottomNavBar extends StatefulWidget {
-  final TabController controller;
+  final MotionTabBarController? controller;
 
   const BottomNavBar({super.key, required this.controller});
 
@@ -13,27 +15,35 @@ class BottomNavBar extends StatefulWidget {
 }
 
 class _BottomNavBarState extends State<BottomNavBar> {
-  List<BottomNavigationBarItem> items = [
-    const BottomNavigationBarItem(icon: Icon(FontAwesomeIcons.user), label: "Profile"),
-    const BottomNavigationBarItem(icon: Icon(FontAwesomeIcons.key), label: "Home"),
-    const BottomNavigationBarItem(icon: Icon(Icons.logout), label: "Logout")
-  ];
-
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      currentIndex: widget.controller.index,
-      items: items,
-      onTap: (value) {
+    return MotionTabBar(
+      controller: widget.controller,
+      // ADD THIS if you need to change your tab programmatically
+      initialSelectedTab: "Home",
+      labels: const ["Home", "Passwords", "Setting"],
+      icons: const [
+        BootstrapIcons.house_fill,
+        BootstrapIcons.shield_fill,
+        BootstrapIcons.gear_wide_connected
+      ],
+      tabSize: 50,
+      tabBarHeight: 55,
+      textStyle: GoogleFonts.montserrat(
+        fontSize: 12,
+        color: AppColors.blue,
+      ),
+      tabIconColor: AppColors.blue,
+      tabIconSize: 28.0,
+      tabIconSelectedSize: 26.0,
+      tabSelectedColor: AppColors.blue,
+      tabIconSelectedColor: AppColors.white,
+      tabBarColor: Colors.white,
+      onTabItemSelected: (int value) {
         setState(() {
-          widget.controller.animateTo(value);
+          widget.controller!.index = value;
         });
       },
-      backgroundColor: AppColors.white,
-      selectedItemColor: AppColors.secondary,
-      unselectedItemColor: AppColors.primary,
-      selectedLabelStyle: GoogleFonts.montserrat(fontSize: 14),
-      unselectedLabelStyle: GoogleFonts.montserrat(fontSize: 14),
     );
   }
 }
